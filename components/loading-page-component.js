@@ -30,8 +30,8 @@ export function renderLoadingPageComponent({ appEl, user, goToPage }) {
    * Передаются данные пользователя и функция навигации.
    */
   renderHeaderComponent({
-    user,
     element: document.querySelector(".header-container"),
+    user,
     goToPage,
   });
 }

@@ -1,11 +1,32 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
+const personalKey = "Arkhipova";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
   return fetch(postsHost, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}
+
+export const getUserPosts = ({ token, userId }) => {
+  const link = `${postsHost}/user-posts/${userId}`
+
+  return fetch(link, {
     method: "GET",
     headers: {
       Authorization: token,
@@ -67,3 +88,28 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
+
+export const addPost = ({token, description, imageUrl}) => {
+  const post = {
+    description, imageUrl
+  }
+
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify(post)
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}
+
