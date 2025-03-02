@@ -127,17 +127,12 @@ const renderApp = () => {
     });
   }
 
-  if (page === POSTS_PAGE) {
+  if (page === POSTS_PAGE || page === USER_POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
       user,
+      token: getToken()
     });
-  }
-
-  if (page === USER_POSTS_PAGE) {
-    // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
   }
 };
 
