@@ -113,3 +113,24 @@ export const addPost = ({token, description, imageUrl}) => {
     });
 }
 
+export const likePost = ({token, postId}) => {
+  
+
+  return fetch(`${postsHost}/${postId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}

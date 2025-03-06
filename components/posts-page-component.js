@@ -2,7 +2,7 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 
-export function renderPostsPageComponent({ appEl, user, }) {
+export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
   
   console.log("Актуальный список постов:", posts);
 
@@ -37,9 +37,12 @@ export function renderPostsPageComponent({ appEl, user, }) {
                   </li>
   
   `).join('');
+
+  const author=posts[0].user.name
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
+                ${isSingleMode?`<p class="user-posts-title">Посты ${author}</p>`:""}
                 <ul class="posts">
                  ${postsHTML}
                   

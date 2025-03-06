@@ -37,12 +37,12 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
 
     document.getElementById("add-button").addEventListener("click", () => {
       if (!imageUrl) {
-        setError("Добавьте картинку");
+        alert("Добавьте картинку");
       }
 
       const description = document.getElementById("desc-input").value;
       if (!description) {
-        setError("Введите описание картинки");
+        alert("Введите описание картинки");
       }
 
       onAddPostClick({

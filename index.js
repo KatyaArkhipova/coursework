@@ -119,7 +119,7 @@ const renderApp = () => {
       appEl,
       onAddPostClick({ description, imageUrl }) {
         // @TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...",);
+        console.log("Добавляю пост...");
         addPost({ token: getToken(), description, imageUrl })
         goToPage(POSTS_PAGE);
       },
@@ -127,12 +127,21 @@ const renderApp = () => {
     });
   }
 
-  if (page === POSTS_PAGE || page === USER_POSTS_PAGE) {
+  if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
       user,
-      token: getToken()
     });
+  }
+
+  if (page === USER_POSTS_PAGE) {
+    // @TODO: реализовать страницу с фотографиями отдельного пользвателя
+    return renderPostsPageComponent({
+      appEl,
+      user,
+      isSingleMode:true
+    });
+    
   }
 };
 
