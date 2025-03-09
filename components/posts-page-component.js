@@ -2,6 +2,7 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken, renderApp } from "../index.js";
 import { toggleLike } from "../api.js"
+import { formatDistanceToNow } from "date-fns";
 export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
   
   console.log("Актуальный список постов:", posts);
