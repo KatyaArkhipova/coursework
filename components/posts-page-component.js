@@ -1,7 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
-
+import { posts, goToPage, getToken, renderApp } from "../index.js";
+import { toggleLike } from "../api.js"
 export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
   
   console.log("Актуальный список постов:", posts);
@@ -20,8 +20,8 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
                       <img class="post-image" src="${post.imageUrl}">
                     </div>
                     <div class="post-likes">
-                      <button data-post-id="${post.id}" class="like-button">
-                        <img src="./assets/images/like-active.svg">
+                      <button data-index="${index}" data-post-id="${post.id}" class="like-button">
+                        <img src="${post.isLiked ? './assets/images/like-active.svg' : './assets/images/like-not-active.svg'}" class="like-image">
                       </button>
                       <p class="post-likes-text">
                         Нравится: <strong>${post.likes.length}</strong>
@@ -65,4 +65,31 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
       });
     });
   }
+
+  document.querySelectorAll(".like-button").forEach(button => {
+    button.addEventListener("click", async (event) => {
+      const postId = button.getAttribute("data-post-id");
+       
+      
+      // Получаем текущее состояние лайка
+
+      const isLiked = button.querySelector(".like-image").src.includes("like-active");
+
+      const postIndex = button.dataset.index;
+      
+
+      const post=posts[postIndex]
+      // Выполняем запрос на изменение лайка
+      const action = isLiked ? 'dislike' : 'like'; 
+      const updatedPost = await toggleLike({ token: getToken(), postId, event: action });
+      post.isLiked = updatedPost.isLiked
+      post.likes = updatedPost.likes
+
+      renderApp();
+      
+    });
+  });
 }
+
+
+

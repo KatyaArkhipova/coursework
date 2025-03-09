@@ -113,10 +113,10 @@ export const addPost = ({token, description, imageUrl}) => {
     });
 }
 
-export const likePost = ({token, postId}) => {
-  
+export const toggleLike = ({token, postId, event}) => {
+  const link = `${postsHost}/${postId}/${event}`
 
-  return fetch(`${postsHost}/${postId}/like`, {
+  return fetch(link, {
     method: "POST",
     headers: {
       Authorization: token,
@@ -133,4 +133,6 @@ export const likePost = ({token, postId}) => {
     .then((data) => {
       return data.post;
     });
+
+    
 }
