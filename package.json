@@ -1,7 +1,6 @@
 {
   "name": "webdev-cw-instapro",
   "version": "1.0.0",
-  "type": "module",
   "description": "MVP социальной сети для обмена фотографиями",
   "main": "index.js",
   "scripts": {

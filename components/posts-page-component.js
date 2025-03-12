@@ -7,16 +7,13 @@ import { ru } from "date-fns/locale";
 
 export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
   
-  console.log("Актуальный список постов:", posts);
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true, locale: ru });
   };
-  /**
-   * @TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
+  
   const postsHTML = posts.map((post, index) => `
   <li class="post">
                     <div class="post-header" data-user-id="${post.user.id}">
@@ -39,7 +36,7 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
                       ${post.description}
                     </p>
                     <p class="post-date">
-                    //${formatDate(post.createdAt)}
+                    ${formatDate(post.createdAt)}
                     </p>
                   </li>
   
