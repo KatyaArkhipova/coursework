@@ -125,7 +125,7 @@ export const toggleLike = ({token, postId, event}) => {
   })
     .then((response) => {
       if (response.status === 401) {
-        throw new Error("Нет авторизации");
+        throw new Error("Лайкать посты могут только авторизованные пользователи");
       }
 
       return response.json();

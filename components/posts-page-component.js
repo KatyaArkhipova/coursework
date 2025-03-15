@@ -13,12 +13,15 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true, locale: ru });
   };
+
+  const removeHtmlTags = (str) => str.replace(/<[^>]*>/g, '');
   
   const postsHTML = posts.map((post, index) => `
+  
   <li class="post">
                     <div class="post-header" data-user-id="${post.user.id}">
                         <img src="${post.user.imageUrl}" class="post-header__user-image">
-                        <p class="post-header__user-name">${post.user.name}</p>
+                        <p class="post-header__user-name">${removeHtmlTags(post.user.name)}</p>
                     </div>
                     <div class="post-image-container">
                       <img class="post-image" src="${post.imageUrl}">
@@ -28,12 +31,16 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
                         <img src="${post.isLiked ? './assets/images/like-active.svg' : './assets/images/like-not-active.svg'}" class="like-image">
                       </button>
                       <p class="post-likes-text">
-                        Нравится: <strong>${post.likes.length}</strong>
+                       Нравится: ${post.likes.length === 1 ? 
+                       `<strong>${removeHtmlTags(post.likes[0].name)}</strong>` : 
+                        post.likes.length > 1 ? 
+                      `<strong>${removeHtmlTags(post.likes[post.likes.length - 1].name)}</strong> и ещё <strong>${post.likes.length - 1}</strong>` : 
+                       '0'}
                       </p>
                     </div>
                     <p class="post-text">
-                      <span class="user-name">${post.user.name}</span>
-                      ${post.description}
+                      <span class="user-name">${removeHtmlTags(post.user.name)}</span>
+                      ${removeHtmlTags(post.description)}
                     </p>
                     <p class="post-date">
                     ${formatDate(post.createdAt)}
@@ -46,7 +53,7 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
-                ${isSingleMode?`<p class="user-posts-title">Посты ${author}</p>`:""}
+                ${isSingleMode?`<p class="user-posts-title">Посты ${removeHtmlTags(author)}</p>`:""}
                 <ul class="posts">
                  ${postsHTML}
                   
@@ -83,17 +90,27 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
       
 
       const post=posts[postIndex]
+      // Получаем токен пользователя
+      const userToken = getToken();
+
+      // Проверка на наличие токена
+      if (!userToken) {
+        alert("Лайкать посты могут только авторизованные пользователи");
+        return;  // Прекращаем выполнение функции
+      }
+
       // Выполняем запрос на изменение лайка
       const action = isLiked ? 'dislike' : 'like'; 
-      const updatedPost = await toggleLike({ token: getToken(), postId, event: action });
-      post.isLiked = updatedPost.isLiked
-      post.likes = updatedPost.likes
+      try {
+        const updatedPost = await toggleLike({ token: userToken, postId, event: action });
+        post.isLiked = updatedPost.isLiked;
+        post.likes = updatedPost.likes;
 
-      renderApp();
-      
+        renderApp();
+      } catch (error) {
+        alert("Произошла ошибка: " + error.message);
+        
+      }
     });
   });
 }
-
-
-

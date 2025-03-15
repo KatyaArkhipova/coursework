@@ -1,11 +1,10 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
-export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
+export function renderAddPostPageComponent({ appEl, onAddPostClick, user, }) {
   let imageUrl;
   
   const render = () => {
-    // @TODO: Реализовать страницу добавления поста
     const appHtml = `
     <div class="page-container">
       <div class="header-container"></div>
@@ -35,7 +34,9 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick, user }) {
       },
     });
 
-    document.getElementById("add-button").addEventListener("click", () => {
+    document.getElementById("add-button").addEventListener("click", (event) => {
+      event.preventDefault(); // Предотвращаем перезагрузку страницы
+
       if (!imageUrl) {
         alert("Добавьте картинку");
       }
