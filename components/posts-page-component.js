@@ -14,14 +14,32 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
     return formatDistanceToNow(date, { addSuffix: true, locale: ru });
   };
 
-  const removeHtmlTags = (str) => str.replace(/<[^>]*>/g, '');
+  const replaceHtmlTags = (str) => {
+    return str
+      .replace(/<h1>(.*?)<\/h1>/g, '# $1') 
+      .replace(/<b>(.*?)<\/b>/g, '*$1*') 
+      .replace(/<strong>(.*?)<\/strong>/g, '*$1*') 
+      .replace(/<i>(.*?)<\/i>/g, '_$1_') 
+      .replace(/<em>(.*?)<\/em>/g, '_$1_') 
+      .replace(/<u>(.*?)<\/u>/g, '~$1~') 
+      .replace(/<mark>(.*?)<\/mark>/g, '==$1==') 
+      .replace(/<del>(.*?)<\/del>/g, '~~$1~~') 
+      .replace(/<ins>(.*?)<\/ins>/g, '++$1++') 
+      .replace(/<sub>(.*?)<\/sub>/g, 'ₛ$1') 
+      .replace(/<sup>(.*?)<\/sup>/g, 'ⁿ$1') 
+      .replace(/&/g, "&amp;")    
+      .replace(/</g, "&lt;")     
+      .replace(/>/g, "&gt;")   
+      .replace(/"/g, "&quot;")   
+      .replace(/'/g, "&#039;");   
+  };
   
   const postsHTML = posts.map((post, index) => `
   
   <li class="post">
                     <div class="post-header" data-user-id="${post.user.id}">
                         <img src="${post.user.imageUrl}" class="post-header__user-image">
-                        <p class="post-header__user-name">${removeHtmlTags(post.user.name)}</p>
+                        <p class="post-header__user-name">${replaceHtmlTags(post.user.name)}</p>
                     </div>
                     <div class="post-image-container">
                       <img class="post-image" src="${post.imageUrl}">
@@ -32,15 +50,15 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
                       </button>
                       <p class="post-likes-text">
                        Нравится: ${post.likes.length === 1 ? 
-                       `<strong>${removeHtmlTags(post.likes[0].name)}</strong>` : 
+                       `<strong>${replaceHtmlTags(post.likes[0].name)}</strong>` : 
                         post.likes.length > 1 ? 
-                      `<strong>${removeHtmlTags(post.likes[post.likes.length - 1].name)}</strong> и ещё <strong>${post.likes.length - 1}</strong>` : 
+                      `<strong>${replaceHtmlTags(post.likes[post.likes.length - 1].name)}</strong> и ещё <strong>${post.likes.length - 1}</strong>` : 
                        '0'}
                       </p>
                     </div>
                     <p class="post-text">
-                      <span class="user-name">${removeHtmlTags(post.user.name)}</span>
-                      ${removeHtmlTags(post.description)}
+                      <span class="user-name">${replaceHtmlTags(post.user.name)}</span>
+                      ${replaceHtmlTags(post.description)}
                     </p>
                     <p class="post-date">
                     ${formatDate(post.createdAt)}
@@ -53,7 +71,7 @@ export function renderPostsPageComponent({ appEl, user, isSingleMode=false }) {
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
-                ${isSingleMode?`<p class="user-posts-title">Посты ${removeHtmlTags(author)}</p>`:""}
+                ${isSingleMode?`<p class="user-posts-title">Посты ${replaceHtmlTags(author)}</p>`:""}
                 <ul class="posts">
                  ${postsHTML}
                   

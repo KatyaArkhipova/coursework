@@ -119,11 +119,18 @@ export const renderApp = () => {
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
-      onAddPostClick({ description, imageUrl }) {
-        // @TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...");
-        addPost({ token: getToken(), description, imageUrl })
-        goToPage(POSTS_PAGE);
+      onAddPostClick: async ({ description, imageUrl }) => {
+        try {
+          console.log("Добавляю пост...");
+          const newPost = await addPost({ token: getToken(), description, imageUrl });
+          
+          posts.push(newPost); 
+          
+          goToPage(POSTS_PAGE);
+        } catch (error) {
+          console.error("Ошибка при добавлении поста:", error);
+          alert("Не удалось добавить пост. Попробуйте еще раз.");
+        }
       },
       user
     });
